@@ -2,15 +2,19 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Main where
+module Network.CloudFlare (CloudFlare
+                          , cfZoneId
+                          , cfDNSRecordId
+                          , upDnsLink
+                          , cfOpts) where
 
 import           Control.Arrow ((>>>), (&&&))
 import           Control.Lens ((^.), (^?), (^..), ix, (.~), (&))
 import           Data.Aeson
 import           Data.Aeson.Lens (key, _Array, _String)
 import           Data.ByteString.Char8 as C8 (pack)
-import qualified Data.ByteString.Lazy as BL
-import           Data.Maybe
+-- import qualified Data.ByteString.Lazy as BL
+-- import           Data.Maybe
 import qualified Data.Text as T
 import           GHC.Generics
 import           Network.Wreq
@@ -62,11 +66,4 @@ cfOpts :: CloudFlare -> Options
 cfOpts cf = defaults & header "Content-Type" .~ ["application/json"]
          & header "X-Auth-Email" .~ [C8.pack $ cfEmail cf]
          & header "X-Auth-Key" .~ [C8.pack $ cfKey cf]
-     
-main :: IO ()
-main = do
-  cfData <- BL.readFile "/home/alex/.cf.json" >>= return . fromJust . decode :: IO CloudFlare
-  zoneID <- cfZoneId cfData "px.io"
-  dnsID <- cfDNSRecordId cfData "alex.px.io" $ fromJust zoneID
-  upDnsLink cfData (fromJust zoneID) (fromJust dnsID)
-       "dnslink=/ipns/QmZ2DdbguyfrLXDhGd3dxAbEP7eeXcJofVpSwovVVhjYAu" "alex.px.io" >>= print
+            
