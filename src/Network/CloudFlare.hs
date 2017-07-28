@@ -5,7 +5,7 @@
 module Network.CloudFlare (CloudFlare
                           , cfZoneId
                           , cfDNSRecordId
-                          , upDnsLink
+                          , cfPutDnsLink
                           , cfOpts) where
 
 import           Control.Arrow ((>>>), (&&&))
@@ -56,8 +56,8 @@ cfDNSRecordId cf aName zoneId = getWith (cfOpts cf & param "type" .~ ["TXT"] & p
                                      >>> (^? ix 0 . key "id" ._String)
                                      >>> return)
 
-upDnsLink :: CloudFlare -> ZoneID -> DNSRecordID -> DNSLink -> AName -> IO Int
-upDnsLink cf zoneId dnsRecordId dnsLink aName = putWith (cfOpts cf)
+cfPutDnsLink :: CloudFlare -> ZoneID -> DNSRecordID -> DNSLink -> AName -> IO Int
+cfPutDnsLink cf zoneId dnsRecordId dnsLink aName = putWith (cfOpts cf)
                                                 (printf "%s/zones/%s/dns_records/%s" (cfEndPoint cf) (T.unpack zoneId) dnsRecordId)
                                                 (toJSON $ CloudFlarePutDNSReq "TXT" aName dnsLink)
                                                 >>= ((^. responseStatus . statusCode) >>> return)
