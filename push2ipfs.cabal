@@ -26,6 +26,8 @@ library
                      , bytestring
                      , containers
                      , text
+                     , directory
+                     , filepath
                      
 executable push2ipfs
   hs-source-dirs:      app

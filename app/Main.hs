@@ -19,3 +19,4 @@ main = do
   cfPutDnsLink cfData (fromJust zoneID) (fromJust dnsID)
        "dnslink=/ipns/QmZ2DdbguyfrLXDhGd3dxAbEP7eeXcJofVpSwovVVhjYAu" "alex.px.io" >>= print
   ipfsPing >>= print
+  ipfsRecAdd "/var/www/alex" >>= print
