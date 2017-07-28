@@ -32,14 +32,14 @@ data CloudFlare = CloudFlare {
     , cfEmail :: String
     } deriving (Show, Generic, FromJSON, ToJSON)
 
-data UpdateDNSReq = UpdateDNSReq {
-      upDnsType :: String
-    , upDnsName :: AName
-    , upDnsContent :: DNSLink
-      } deriving (Show, Generic, FromJSON)
+data CloudFlarePutDNSReq = CloudFlarePutDNSReq {
+      cfPutDnsType :: String
+    , cfPutDnsName :: AName
+    , cfPutDnsContent :: DNSLink
+    } deriving (Show, Generic, FromJSON)
 
-instance ToJSON UpdateDNSReq where
-    toJSON (UpdateDNSReq dnsType dnsName dnsContent) = object ["name" .= dnsName
+instance ToJSON CloudFlarePutDNSReq where
+    toJSON (CloudFlarePutDNSReq dnsType dnsName dnsContent) = object ["name" .= dnsName
                                                               ,"type" .= dnsType
                                                               ,"content" .= dnsContent]
 
@@ -59,7 +59,7 @@ cfDNSRecordId cf aName zoneId = getWith (cfOpts cf & param "type" .~ ["TXT"] & p
 upDnsLink :: CloudFlare -> ZoneID -> DNSRecordID -> DNSLink -> AName -> IO Int
 upDnsLink cf zoneId dnsRecordId dnsLink aName = putWith (cfOpts cf)
                                                 (printf "%s/zones/%s/dns_records/%s" (cfEndPoint cf) (T.unpack zoneId) dnsRecordId)
-                                                (toJSON $ UpdateDNSReq "TXT" aName dnsLink)
+                                                (toJSON $ CloudFlarePutDNSReq "TXT" aName dnsLink)
                                                 >>= ((^. responseStatus . statusCode) >>> return)
                                                                             
 cfOpts :: CloudFlare -> Options

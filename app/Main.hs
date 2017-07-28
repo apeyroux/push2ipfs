@@ -4,11 +4,11 @@
 
 module Main where
 
+import           Data.Aeson
 import qualified Data.ByteString.Lazy as BL
 import           Data.Maybe
-import           Network.CloudFlare
-import Data.Aeson
 import qualified Data.Text as T
+import           Network.CloudFlare
      
 main :: IO ()
 main = do
