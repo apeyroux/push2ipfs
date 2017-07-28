@@ -24,6 +24,7 @@ library
                      , aeson
                      , lens-aeson
                      , bytestring
+                     , containers
                      , text
                      
 executable push2ipfs
