@@ -1,0 +1,15 @@
+* push2ipfs
+
+Use cloudflare and ipns to deploy my hakyll site.
+
+https://alex.px.io
+
+** Sample config (~/.cf.json)
+
+#+BEGIN_SRC json
+{
+  "cfEndPoint": "https://api.cloudflare.com/client/v4/",
+  "cfEmail": "alex@xxxxxx.io",
+  "cfKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+#+END_SRC
