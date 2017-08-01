@@ -12,6 +12,7 @@ import           Data.Aeson.Lens (key, _Array, _String)
 import           Data.Map
 import           Data.Monoid
 import qualified Data.Text as T
+import qualified Data.ByteString.Lazy.Char8 as C8
 import           GHC.Generics (Generic)
 import           Network.Wreq
 import           System.Directory
@@ -35,13 +36,22 @@ ipfsDefaultConfig = IPFS "http://127.0.0.1:5001/api/v0/"
 ipfsPing :: IO Int
 ipfsPing = get (printf "%s/ping" (ipfsEndPoint ipfsDefaultConfig)) >>= ((^. responseStatus . statusCode) >>> return)
 
+-- ipfsAdd' :: FilePath -> IO IPFSObj
+ipfsAddDir fp = do
+  q <- postWith opts (printf "%s/add" (ipfsEndPoint ipfsDefaultConfig)) ["filename" := fp]
+  return $ q ^. responseBody
+  where
+    opts = defaults & header "Content-Type" .~ ["application/x-directory"]
+           -- & param "recursive" .~ ["true"]
+           -- & param "wrap-with-directory" .~ ["true"]
+           -- & param "quieter" .~ ["true"]
+
 ipfsAdd :: FilePath -> IO IPFSObj
 ipfsAdd fp = do
   q <- postWith opts (printf "%s/add" (ipfsEndPoint ipfsDefaultConfig)) (partFile "file" fp)
   return $ IPFSObj (q ^. responseBody . key "Hash" . _String) fp
   where
-    opts = defaults & param "recursive" .~ ["true"]
-           & param "wrap-with-directory" .~ ["true"]
+    opts = defaults -- & param "recursive" .~ ["true"]
            & param "quieter" .~ ["true"]
 
 ipfsRecAdd :: FilePath -> IO [IPFSObj]
